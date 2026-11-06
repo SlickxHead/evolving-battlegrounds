@@ -8,3 +8,4 @@ On your phone, open the link and add it to your home screen: on iPhone, tap Shar
 
 ## Credits
 Music: "Battle Music" (RPG Maker Mix) by **Eclipzodiac**, used with credit per the composer's terms.
+Sound effects: "400 Sounds Pack".
