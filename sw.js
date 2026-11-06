@@ -1,5 +1,5 @@
 // Offline cache for the installed game. Bump VERSION whenever you publish a new build.
-const VERSION = 'eb-v6';
+const VERSION = 'eb-v7';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
@@ -16,6 +16,10 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(fetch(req).then((res) => { const copy = res.clone(); caches.open(VERSION).then((c) => c.put('./index.html', copy)); return res; })
       .catch(() => caches.match('./index.html')));
   } else {
-    e.respondWith(caches.match(req).then((hit) => hit || fetch(req)));
+    // cache-first; music and other assets are stored the first time they load (works offline afterwards)
+    e.respondWith(caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
+      if (res.ok && res.status === 200) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
+      return res;
+    })));
   }
 });
