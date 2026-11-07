@@ -1,5 +1,5 @@
 // Offline cache for the installed game. Bump VERSION whenever you publish a new build.
-const VERSION = 'eb-v12';
+const VERSION = 'eb-v13';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
@@ -13,7 +13,7 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const isPage = req.mode === 'navigate' || req.url.endsWith('.html') || req.url.endsWith('/');
   if (isPage) {
-    e.respondWith(fetch(req).then((res) => { const copy = res.clone(); caches.open(VERSION).then((c) => c.put('./index.html', copy)); return res; })
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then((res) => { const copy = res.clone(); caches.open(VERSION).then((c) => c.put('./index.html', copy)); return res; })
       .catch(() => caches.match('./index.html')));
   } else {
     // cache-first; music and other assets are stored the first time they load (works offline afterwards)
