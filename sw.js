@@ -1,5 +1,5 @@
 // Offline cache for the installed game. Bump VERSION whenever you publish a new build.
-const VERSION = 'eb-v30';
+const VERSION = 'eb-v31';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
